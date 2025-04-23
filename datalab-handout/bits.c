@@ -174,11 +174,8 @@ int isTmax(int x) {
  *   Rating: 2
  */
 int allOddBits(int x) {
-  int y = !((x & 0xAA) ^ 0xAA);
-  int z = !((x & 0xAA << 8) ^ (0xAA << 8));
-  int xy = !((x & 0xAA << 16) ^ (0xAA << 16));
-  int xz = !((x & 0xAA << 24) ^ (0xAA << 24));
-  int result = y & z & xy & xz;
+  int mask = (0xAA) | (0xAA << 8) | (0xAA << 16) | (0xAA << 24);
+  int result = !((x & mask) ^ mask);
   return result;
 }
 /* 

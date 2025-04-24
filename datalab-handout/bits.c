@@ -199,7 +199,15 @@ int negate(int x) {
  *   Rating: 3
  */
 int isAsciiDigit(int x) {
-  return 2;
+  int lower = 0x30;
+  int upper = 0x39;
+  int sign_bit_mask = 0x01 << 31;
+  int value_under = x + (~lower) + 1;
+  int value_above = upper + (~x) + 1;
+
+  int result = !!(((value_under & sign_bit_mask) | (value_above & sign_bit_mask)) ^ sign_bit_mask);
+  
+  return result;
 }
 /* 
  * conditional - same as x ? y : z 

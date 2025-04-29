@@ -13,6 +13,7 @@ int main() {
   assert(uadd_ok(0x00000000, 0xffffff00) == 1);
   assert(uadd_ok(0xffffffff, 0x00000000) == 1);
   assert(uadd_ok(0xffffffff, 0xffffffff) == 0);
+  assert(uadd_ok(0x00000000, 0x00000000) == 1);
   
   return 0;
 }

@@ -2,11 +2,10 @@
 
 #include <assert.h>
 
-
 /* Determine whether arguments can be added without overflow */
 int uadd_ok(unsigned x, unsigned y) {
   unsigned sum = x + y;
-  return sum >= x && sum >= y;
+  return !(sum < x || sum < y);
 }
 
 int main() {

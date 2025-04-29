@@ -17,6 +17,8 @@ int main() {
 
   /* Therefore, sum - x == y is true in this case which should not be correct */
 
+  /* Correction: two's complement addition form an abelian group so sum - x ((x + y) - x) is also going to evaluate to y regardless of overflow */
+
   return 0;
 }
 

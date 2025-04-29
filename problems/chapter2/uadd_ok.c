@@ -1,5 +1,5 @@
 /* Problem 2.27 */
-#include <stdio.h>
+
 #include <assert.h>
 
 

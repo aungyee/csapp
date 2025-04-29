@@ -17,7 +17,7 @@ int main() {
   assert(tadd_ok(0xffffffff, 0xffffffff) == 1);
   assert(tadd_ok(0x80000000, 0x80000000) == 0);
   assert(tadd_ok(0x7fffffff, 0x7fffffff) == 0);
-  
+
   return 0;
-  
+
 }

@@ -229,7 +229,21 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  return 2;
+  
+  int x_sign = x >> 31;
+  int y_sign = y >> 31;
+
+  // Case 1: x and y have different sign
+  int different_sign = x_sign ^ y_sign;
+  int different_sign_and_x_is_negative = different_sign & x_sign;
+
+  // Case 2: x and y have the same sign and so it is safe to subtract
+  int same_sign = !different_sign;
+  int diff = x + (~y) + 1;
+  int diff_is_negative = (diff >> 31) & 1;
+
+  int result = !!(different_sign_and_x_is_negative | !(diff) | (same_sign & diff_is_negative));
+  return result;
 }
 //4
 /* 

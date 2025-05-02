@@ -217,7 +217,9 @@ int isAsciiDigit(int x) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return 2;
+  int mask = ~(!!(x)) + 1; // when mask is true mask is 0xFFFFFFFF and 0x00000000 otherwise
+  int result = (mask & y) | (~mask & z);
+  return result;
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 

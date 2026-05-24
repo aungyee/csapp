@@ -143,7 +143,7 @@ NOTES:
  *   Rating: 1
  */
 int bitXor(int x, int y) {
-  return 2;
+  return ~(~(~x & y) & ~(x & ~y));
 }
 /* 
  * tmin - return minimum two's complement integer 
@@ -152,9 +152,7 @@ int bitXor(int x, int y) {
  *   Rating: 1
  */
 int tmin(void) {
-
-  return 2;
-
+  return 1 << 31;
 }
 //2
 /*
@@ -165,7 +163,7 @@ int tmin(void) {
  *   Rating: 1
  */
 int isTmax(int x) {
-  return 2;
+  return !((~(x + 1) ^ x) | !(x + 1));
 }
 /* 
  * allOddBits - return 1 if all odd-numbered bits in word set to 1
@@ -176,7 +174,9 @@ int isTmax(int x) {
  *   Rating: 2
  */
 int allOddBits(int x) {
-  return 2;
+  int mask = (0xAA) | (0xAA << 8) | (0xAA << 16) | (0xAA << 24);
+  int result = !((x & mask) ^ mask);
+  return result;
 }
 /* 
  * negate - return -x 
@@ -186,7 +186,7 @@ int allOddBits(int x) {
  *   Rating: 2
  */
 int negate(int x) {
-  return 2;
+  return (~x) + 1;
 }
 //3
 /* 
@@ -199,7 +199,15 @@ int negate(int x) {
  *   Rating: 3
  */
 int isAsciiDigit(int x) {
-  return 2;
+  int lower = 0x30;
+  int upper = 0x39;
+  int sign_bit_mask = 0x01 << 31;
+  int value_under = x + (~lower) + 1;
+  int value_above = upper + (~x) + 1;
+
+  int result = !!(((value_under & sign_bit_mask) | (value_above & sign_bit_mask)) ^ sign_bit_mask);
+  
+  return result;
 }
 /* 
  * conditional - same as x ? y : z 
@@ -209,7 +217,9 @@ int isAsciiDigit(int x) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return 2;
+  int mask = ~(!!(x)) + 1; // when mask is true mask is 0xFFFFFFFF and 0x00000000 otherwise
+  int result = (mask & y) | (~mask & z);
+  return result;
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
@@ -219,7 +229,21 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  return 2;
+  
+  int x_sign = x >> 31;
+  int y_sign = y >> 31;
+
+  // Case 1: x and y have different sign
+  int different_sign = x_sign ^ y_sign;
+  int different_sign_and_x_is_negative = different_sign & x_sign;
+
+  // Case 2: x and y have the same sign and so it is safe to subtract
+  int same_sign = !different_sign;
+  int diff = x + (~y) + 1;
+  int diff_is_negative = (diff >> 31) & 1;
+
+  int result = !!(different_sign_and_x_is_negative | !(diff) | (same_sign & diff_is_negative));
+  return result;
 }
 //4
 /* 
@@ -231,7 +255,8 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4 
  */
 int logicalNeg(int x) {
-  return 2;
+  int result = (((x | (~x + 1))) >> 31) + 1;
+  return result;
 }
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
@@ -246,7 +271,33 @@ int logicalNeg(int x) {
  *  Rating: 4
  */
 int howManyBits(int x) {
-  return 0;
+  int mask = x >> 31;
+  int y = x ^ mask;
+  int bits = 0;
+
+  int shift = (!!(y >> 16)) << 4;
+  bits += shift;
+  y >>= shift;
+
+  shift = (!!(y >> 8)) << 3;
+  bits += shift;
+  y >>= shift;
+
+  shift = (!!(y >> 4)) << 2;
+  bits += shift;
+  y >>= shift;
+
+  shift = (!!(y >> 2)) << 1;
+  bits += shift;
+  y >>= shift;
+
+  shift = (!!(y >> 1));
+  bits += shift;
+  y >>= shift;
+  
+  bits += y & 1;
+  
+  return bits + 1;
 }
 //float
 /* 
